@@ -7,7 +7,7 @@ Spell Property WerewolfChangeRingOfHircine Auto ; the form ID for the power give
 Spell Property WerewolfChange Auto ; the form ID for the Beast Form power
 float dawn = 19.0 ; moon appears in sky at 7 pm
 float dusk = 5.0; moon leaves the sky at 5 am
-float updateInterval = 60.0 ; registers for updates every 60 seconds
+float updateInterval = 30.0 ; registers for updates every 30 seconds
 GlobalVariable Property GameHour Auto
 Faction Property PlayerWerewolfFaction Auto
 
@@ -78,7 +78,7 @@ Function toggleChangesIfApplicable()
 	; if it is nighttime, check to see if we can force a transformation and apply any stat bonuses
 	if (isNighttime())
 		; if it has been more than than 11 hours since our last change and it is nighttime, then it is a new night
-		if ((GetCurrentGameTime() - lastChangeTime) > 11.0)
+		if (((GetCurrentGameTime() * 24.0) - lastChangeTime) > 11.0)
 			hasChanged = false ; resets hasChanged to false, since it is a new night (new forced transformation attempt available)
 
 			; if the bonuses from the last night are still in effect, we need to remove them
@@ -87,7 +87,7 @@ Function toggleChangesIfApplicable()
 				isAugmented = false
 			endIf
 
-			lastChangeTime = GetCurrentGameTime() ; update lastChangeTime to current time
+			lastChangeTime = GetCurrentGameTime() * 24.0 ; update lastChangeTime to current time
 		endIf
 		; if a forced transformation has not yet been attempted
 		if (!hasChanged)
