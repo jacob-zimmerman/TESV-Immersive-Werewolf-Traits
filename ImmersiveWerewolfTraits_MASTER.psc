@@ -19,28 +19,43 @@ float healRateMultiplier ; during a full moon, the character's health regen spee
 float staminaRateMultiplier ; during a full moon, the character's stamina regen speed is multiplied by this
 float beastMultiplier ; during a full moon, the character's chance of forcibly turning into a werewolf
 
+float speedBonus ; bonus applied to character's running speed
+float jumpBonus ; bonus applied to the character's normal jumping height
+float attackDamageBonus ; bonus applied to the character's non-magic attack damage multiplier
+float weaponSpeedBonus ; bonus applied to the character's normal attack speed
+float healRateBonus ; bonus applied to the character's health regen speed
+float staminaRateBonus ; bonus applied to the character's stamina regen speed
+
 bool enableSpeedAugment ; if true, normal running speed is augmented by moon bonus
 bool enableJumpAugment ; if true, normal jumping height is augmented by moon bonus
 bool enableAttackDamageAugment ; if true, non-magic attack damage is augmented by moon bonus
 bool enableWeaponSpeedAugment ; if true, attack speed is augmented by moon bonus
 bool enableHealRateAugment ; if true, health regen is augmented by moon bonus
 bool enableStaminaRateAugment ; if true, stamina regen is augmented by moon bonus
+
+float lastChangeTime ; the time the last transformation/augmentation was attempted
+
 bool enableForcedChange ; if true, the player may randomly turn into a werewolf at night
+bool alwaysChange ; if true, random transformations occur every night
 bool enableHircineOverride ; if true, the Ring of Hircine prevents random transformations when worn
 
 bool hasChanged ; if true, the player has already changed during this night
+bool isAugmented ; if true, the player's stats have already been augmented
 bool ignoreLycanthropy ; if true, mod still affects player, even if he does not have lycanthropy
 bool isWerewolf ; if true, player is a werewolf
 
 ;===================================================================================
 ;
-;  Starts 
+;	Called on intialization of this mod
 ;
 ;===================================================================================
 Event OnInit()
+
 	isWerewolf = playerIsWerewolf()
 	toggleChangesIfApplicable()
 	RegisterForSingleUpdate(updateInterval)
+	RegisterForSleep()
+
 endEvent
 
 ;===================================================================================
@@ -54,19 +69,45 @@ Event OnUpdate()
 	RegisterForSingleUpdate(updateInterval)
 endEvent
 
+;===================================================================================
+;
+;	Called by the onUpdate() method. Checks to see which updates can be applied
+;
+;===================================================================================
 Function toggleChangesIfApplicable()
+	; if it is nighttime, check to see if we can force a transformation and apply any stat bonuses
 	if (isNighttime())
-		if (!hasChanged)
-			forceTransformation()
-			augmentStats()
-			hasChanged = true
+		; if it has been more than than 11 hours since our last change and it is nighttime, then it is a new night
+		if ((GetCurrentGameTime() - lastChangeTime) > 11.0)
+			hasChanged = false ; resets hasChanged to false, since it is a new night (new forced transformation attempt available)
+
+			; if the bonuses from the last night are still in effect, we need to remove them
+			if (isAugmented)
+				resetStats()
+				isAugmented = false
+			endIf
+
+			lastChangeTime = GetCurrentGameTime() ; update lastChangeTime to current time
 		endIf
+		; if a forced transformation has not yet been attempted
+		if (!hasChanged)
+			forceTransformation() ; attempt to force transformation
+			hasChanged = true ; remember that forced transformation was attempted so we don't attempt twice in one night
+		endIf
+
+		if (!isAugmented)
+			augmentStats() ; apply bonuses to player
+			isAugmented = true ; remember that bonuses were applied so we don't apply any additonal bonuses
+		endIf
+		; in the case that it is nighttime but the previous night's augments have yet to be removed
 	else
 		hasChanged = false
+		if (isAugmented)
+			resetStats()
+			isAugmented = false
+		endIf
 	endIf
 endFunction
-
-
  
 ;===================================================================================
 ;
@@ -77,8 +118,6 @@ endFunction
 int Function GetPassedGameDays() Global
 	float gameTime
 	int gameDaysPassed
- 
-	gameTime = GetCurrentGameTime()
 	gameDaysPassed = gameTime as int
 	return gameDaysPassed
 endFunction
@@ -197,26 +236,31 @@ endFunction
 ;===================================================================================
 function augmentStats()
 
-	float baseSpeedMult = PlayerRef.GetActorValue("SpeedMult")
-	float baseJumpBonus = PlayerRef.GetActorValue("JumpBonus")
-	float baseAttackDamageMult = PlayerRef.GetActorValue("attackDamageMult")
-	float baseWeaponSpeedMult = PlayerRef.GetActorValue("WeaponSpeedMult")
-	float baseHealRate = PlayerRef.GetActorValue("HealRate")
-	float baseStaminaRate = PlayerRef.GetActorValue("StaminaRate")
+	float baseSpeedMult = PlayerRef.GetBaseActorValue("SpeedMult")
+	float baseJumpBonus = PlayerRef.GetBaseActorValue("JumpBonus")
+	float baseAttackDamageMult = PlayerRef.GetBaseActorValue("attackDamageMult")
+	float baseWeaponSpeedMult = PlayerRef.GetBaseActorValue("WeaponSpeedMult")
+	float baseHealRate = PlayerRef.GetBaseActorValue("HealRate")
+	float baseStaminaRate = PlayerRef.GetBaseActorValue("StaminaRate")
+
 	float moonModifier = GetMoonModifier()
 
 
 	if (enableSpeedAugment)
-		PlayerRef.ModActorValue("SpeedMult", baseSpeedMult * speedMultiplier * moonModifier)
+		speedBonus= baseSpeedMult * speedMultiplier * moonModifier
+		PlayerRef.ModActorValue("SpeedMult", speedBonus)
 	endIf
 	if (enableJumpAugment)
-		PlayerRef.ModActorValue("JumpBonus", baseJumpBonus * jumpMultiplier * moonModifier)
+		jumpBonus = baseJumpBonus * jumpMultiplier * moonModifier
+		PlayerRef.ModActorValue("JumpBonus", jumpBonus)
 	endIf
 	if (enableAttackDamageAugment)
-		PlayerRef.ModActorValue("attackDamageMult", baseAttackDamageMult * attackDamageMultiplier * moonModifier)
+		attackDamageBonus = baseAttackDamageMult * attackDamageMultiplier * moonModifier
+		PlayerRef.ModActorValue("attackDamageMult", attackDamageBonus)
 	endIf
 	if (enableWeaponSpeedAugment)
-		PlayerRef.ModActorValue("WeaponSpeedMultiplier", baseWeaponSpeedMult * weaponSpeedMultiplier * moonModifier)
+		weaponSpeedBonus = baseWeaponSpeedMult * weaponSpeedMultiplier * moonModifier
+		PlayerRef.ModActorValue("WeaponSpeedMultiplier", weaponSpeedBonus)
 	endIf
 	if (enableHealRateAugment)
 		PlayerRef.ModActorValue("HealRate", baseHealRate * healRateMultiplier * moonModifier)
@@ -229,6 +273,20 @@ endFunction
 
 ;===================================================================================
 ;
+;	Removes bonuses applied to actor values if any of these have been applied
+;
+;===================================================================================
+function resetStats()
+	PlayerRef.ModActorValue("SpeedMult", (-1) * speedBonus)
+	PlayerRef.ModActorValue("JumpBonus", (-1) * jumpBonus)
+	PlayerRef.ModActorValue("attackDamageMult", (-1) * attackDamageBonus)
+	PlayerRef.ModActorValue("WeaponSpeedMultiplier", (-1) * weaponSpeedBonus)
+	PlayerRef.ModActorValue("HealRate", (-1) * healRateBonus)
+	PlayerRef.ModActorValue("StaminaRate", (-1) * staminaRateBonus)
+endFunction
+
+;===================================================================================
+;
 ;	Forces a werewolf transformation if possible (must pass probability check and 
 ;	fail the Hircine Ring Override)
 ;
@@ -236,10 +294,13 @@ endFunction
 function forceTransformation()
 	if (enableHircineOverride && hasRingEquipped())
 		return ; no transformation enabled
+	elseIf (alwaysChange)
+		WerewolfChangeRingOfHircine.Cast(PlayerRef) ; change always will occur at night
+		;WerewolfChange.Cast(PlayerRef)
 	else
 		float random = Utility.RandomFloat()
-		if (beastMultiplier * GetMoonModifier() > random)
-			WerewolfChangeRingOfHircine.Cast(PlayerRef)
+		if (beastMultiplier * GetMoonModifier() >= random)
+			WerewolfChangeRingOfHircine.Cast(PlayerRef) ; change may randomly occur at night
 			;WerewolfChange.Cast(PlayerRef)
 		endIf
 	endIf
