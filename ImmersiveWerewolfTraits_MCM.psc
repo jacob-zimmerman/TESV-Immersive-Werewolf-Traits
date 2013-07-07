@@ -158,6 +158,7 @@ event OnConfigInit()
 	ignoreLycanthropy = false
 	alwaysChange = false
 	enableForcedChange = true
+	enableHircineOverride = true
 	lastChangeTime = -11.0
 
 	enableSpeedAugment = true
@@ -173,6 +174,7 @@ event OnConfigInit()
 	weaponSpeedMultiplier = 2.0
 	healRateMultiplier = 2.0
 	staminaRateMultiplier = 2.0
+	beastMultiplier = 1.0
 
 	toggleChangesIfApplicable()
 	RegisterForSingleUpdate(updateInterval)
@@ -278,9 +280,9 @@ event OnPageReset(string a_page)
 		endIf
 
 		if (enableHircineOverride)
-			enableHircineOverride_OID_T = AddTextOption("Always Change: ", "True")
+			enableHircineOverride_OID_T = AddTextOption("Enable Hircine Override: ", "True")
 		else
-			enableHircineOverride_OID_T = AddTextOption("Always Change: ", "False")
+			enableHircineOverride_OID_T = AddTextOption("Enable Hircine Override: ", "False")
 		endIf
 
 		temp = (beastMultiplier as String) + "x"
