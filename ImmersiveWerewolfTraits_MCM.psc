@@ -1,7 +1,7 @@
 ;===================================================================================
 ; IMMERSIVE WEREWOLF TRAITS
 ;
-; VERSION 1.0
+; VERSION 0.5 (Not yet finished)
 ;
 ; AUTHOR: Jacob Lloyd Zimmerman
 ;
