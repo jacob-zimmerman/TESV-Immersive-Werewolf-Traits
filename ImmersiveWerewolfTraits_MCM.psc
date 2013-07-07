@@ -149,7 +149,7 @@ event OnConfigInit()
 {Called when this config menu is initialized}
 
 	Pages = new string[2]
-	Pages[0] = "Current Settins"
+	Pages[0] = "Current Settings"
 	Pages[1] = "Adjust Settings"
 
 	isWerewolf = playerIsWerewolf()
@@ -360,42 +360,42 @@ event OnOptionHighlight(int a_option)
 	if (a_option == playerIsWerewolf_OID_T)
 		SetInfoText("Displays whether or not the player is a werewolf. True if the player is a werewolf; false otherwise.")
 	elseIf (a_option == ignoreLycanthropy_OID_T || a_option == ignoreLycanthropy_OID_B)
-		SetInfoText("If true, mod still affects player, even if he does not have lycanthropy./nDefault: false")
+		SetInfoText("If true, mod still affects player, even if he does not have lycanthropy.\nDefault: false")
 	elseIf (a_option == currentMoonVisibility_OID_T)
 		SetInfoText("The current percentage of the moon that is visible. E.g., if it is a full moon, this number will be 100%, but during a waxing or waning half moon, it will only be 50%")
 
 	elseIf (a_option == enableForcedChange_OID_T || a_option == ignoreLycanthropy_OID_B)
-		SetInfoText("If true, the player may randomly turn into a werewolf at night./nDefault: true")
+		SetInfoText("If true, the player may randomly turn into a werewolf at night.\nDefault: true")
 	elseIf (a_option == enableSpeedAugment_OID_T || a_option == enableSpeedAugment_OID_B)
-		SetInfoText("If true, normal running speed is augmented based on speed multiplier and moon visibility./nDefault: true")
+		SetInfoText("If true, normal running speed is augmented based on speed multiplier and moon visibility.\nDefault: true")
 	elseIf (a_option == enableJumpAugment_OID_T || a_option == enableJumpAugment_OID_B)
-		SetInfoText("If true, normal jumping height ise augmented based on jump multiplier and moon visibility./nDefault: true")
+		SetInfoText("If true, normal jumping height ise augmented based on jump multiplier and moon visibility.\nDefault: true")
 	elseIf (a_option == enableAttackDamageAugment_OID_T || a_option == enableAttackDamageAugment_OID_B)
-		SetInfoText("If true, non-magic attack damage is augmented based on attack damage multiplier and moon visibility./nDefault: true")
+		SetInfoText("If true, non-magic attack damage is augmented based on attack damage multiplier and moon visibility.\nDefault: true")
 	elseIf (a_option == enableWeaponSpeedAugment_OID_T || a_option == enableWeaponSpeedAugment_OID_B)
-		SetInfoText("If true, attack speed is augmented based on weapon speed multiplier and moon visibility./nDefault: true")
+		SetInfoText("If true, attack speed is augmented based on weapon speed multiplier and moon visibility.\nDefault: true")
 	elseIf (a_option == enableHealRateAugment_OID_T || a_option == enableHealRateAugment_OID_B)
-		SetInfoText("If true, health regen rate is augmented based on heal rate multiplier and moon visibility./nDefault: true")
+		SetInfoText("If true, health regen rate is augmented based on heal rate multiplier and moon visibility.\nDefault: true")
 	elseIf (a_option == enableStaminaRateAugment_OID_T || a_option == enableStaminaRateAugment_OID_B)
-		SetInfoText("If true, stamina regen rate is augmented based on stamina rate multiplier and moon visibility./nDefault: true")
+		SetInfoText("If true, stamina regen rate is augmented based on stamina rate multiplier and moon visibility.\nDefault: true")
 
 	elseIf (a_option == speedMultiplier_OID_T || a_option == speedMultiplier_OID_S)
-		SetInfoText("At night, the player's running speed is multiplied by this number times the moon visibility./nDefault: 2.0")
+		SetInfoText("At night, the player's running speed is multiplied by this number times the moon visibility.\nDefault: 2.0")
 	elseIf (a_option == jumpMultiplier_OID_T || a_option == jumpMultiplier_OID_S)
-		SetInfoText("At night, the player's jump height is multiplied by this number times the moon visibility./nDefault: 2.0")
+		SetInfoText("At night, the player's jump height is multiplied by this number times the moon visibility.\nDefault: 2.0")
 	elseIf (a_option == attackDamageMultiplier_OID_T || a_option == attackDamageMultiplier_OID_S)
-		SetInfoText("At night, the player's non-magic attack damage is multiplied by this number times the moon visibility./nDefault: 2.0")
+		SetInfoText("At night, the player's non-magic attack damage is multiplied by this number times the moon visibility.\nDefault: 2.0")
 	elseIf (a_option == weaponSpeedMultiplier_OID_T || a_option == weaponSpeedMultiplier_OID_S)
-		SetInfoText("At night, the player's attack speed is multiplied by this number times the moon visibility./nDefault: 2.0")
+		SetInfoText("At night, the player's attack speed is multiplied by this number times the moon visibility.\nDefault: 2.0")
 	elseIf (a_option == healRateMultiplier_OID_T || a_option == healRateMultiplier_OID_S)
-		SetInfoText("At night, the player's health regen rate is multiplied by this number times the moon visibility./nDefault: 2.0")
+		SetInfoText("At night, the player's health regen rate is multiplied by this number times the moon visibility.\nDefault: 2.0")
 	elseIf (a_option == staminaRateMultiplier_OID_T || a_option == staminaRateMultiplier_OID_S)
-		SetInfoText("At night, the player's stamina regen rate is multiplied by this number times the moon visibility./nDefault: 2.0")
+		SetInfoText("At night, the player's stamina regen rate is multiplied by this number times the moon visibility.\nDefault: 2.0")
 
 	elseIf (a_option == alwaysChange_OID_T || a_option == ignoreLycanthropy_OID_B)
-		SetInfoText("If true, the player will always forcibly transform at night, regardless of the current moon visibility./nDefault: false")
+		SetInfoText("If true, the player will always forcibly transform at night, regardless of the current moon visibility.\nDefault: false")
 	elseIf (a_option == enableHircineOverride_OID_T || a_option == ignoreLycanthropy_OID_B)
-		SetInfoText("If true, the Ring of Hircine, when equipped, will prevent forced transformations from occuring at night./nDefault: true")
+		SetInfoText("If true, the Ring of Hircine, when equipped, will prevent forced transformations from occuring at night.\nDefault: true")
 	elseIf (a_option == beastMultiplier_OID_T || a_option == beastMultiplier_OID_S)
 		SetInfoText("At night, the probability of the player forcibly transforming into a werewolf is equal to this number times the moon visibility")
 
@@ -824,6 +824,8 @@ endFunction
 ;===================================================================================
 function augmentStats()
 
+	Debug.Notification("Augmenting stats...")
+
 	float baseSpeedMult = PlayerRef.GetBaseActorValue("SpeedMult")
 	float baseJumpBonus = PlayerRef.GetBaseActorValue("JumpBonus")
 	float baseAttackDamageMult = PlayerRef.GetBaseActorValue("attackDamageMult")
@@ -880,14 +882,19 @@ endFunction
 ;
 ;===================================================================================
 function forceTransformation()
+	Debug.Notification("Forcing transformation...")
 	if (enableHircineOverride && hasRingEquipped())
+		Debug.Notification("Hircine Override. No transformation occurs.")
 		return ; no transformation enabled
 	elseIf (alwaysChange)
+		Debug.Notification("Always change enabled. Attempting to force change...")
 		WerewolfChangeRingOfHircine.Cast(PlayerRef) ; change always will occur at night
 		;WerewolfChange.Cast(PlayerRef)
 	else
+		Debug.Notification("No Hircine Override. Attempting to force change...")
 		float random = Utility.RandomFloat()
 		if (beastMultiplier * GetMoonModifier() >= random)
+			Debug.Notification("Forced change successful.")
 			WerewolfChangeRingOfHircine.Cast(PlayerRef) ; change may randomly occur at night
 			;WerewolfChange.Cast(PlayerRef)
 		endIf
